@@ -1,0 +1,357 @@
+/* ========================================
+   CSS RESET AND BASE STYLES
+   ======================================== */
+
+/* UNIVERSAL RESET: Remove default margins, padding, and set box-sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BODY STYLING: Set base font family, background, and text color */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* CONTAINER: Responsive container for content width management */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ========================================
+   HEADER SECTION STYLES
+   ======================================== */
+
+/* HEADER: Main header styling with background and spacing */
+.header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 2rem 0;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+/* TITLE: Main page title styling */
+.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* SUBTITLE: Page description text styling */
+.subtitle {
+    font-size: 1.2rem;
+    text-align: center;
+    color: #7f8c8d;
+    font-weight: 300;
+}
+
+/* ========================================
+   MAIN CONTENT LAYOUT
+   ======================================== */
+
+/* MAIN CONTENT: Layout container for map and controls */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* CONTROLS PANEL: Container for map controls and information */
+.controls-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 2rem;
+    align-items: center;
+}
+
+/* INFO SECTION: Styling for information display area */
+.info-section h3 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.info-section p {
+    color: #7f8c8d;
+    margin-bottom: 0.3rem;
+}
+
+.description {
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* ========================================
+   FORM CONTROLS STYLING
+   ======================================== */
+
+/* STYLE SELECTOR: Dropdown menu for map style selection */
+.style-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.style-selector label {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+.style-selector select {
+    padding: 0.7rem 1rem;
+    border: 2px solid #e0e6ed;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.style-selector select:hover {
+    border-color: #667eea;
+}
+
+.style-selector select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* ========================================
+   BUTTON CONTROLS STYLING
+   ======================================== */
+
+/* ZOOM CONTROLS: Container for zoom control buttons */
+.zoom-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* CONTROL BUTTONS: Styling for interactive control buttons */
+.control-btn {
+    padding: 0.7rem 1.2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.control-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.control-btn:active {
+    transform: translateY(0);
+}
+
+/* ========================================
+   MAP CONTAINER STYLING
+   ======================================== */
+
+/* MAP CONTAINER: Main container for the MapLibre map */
+.map-container {
+    height: 70vh;
+    min-height: 500px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+}
+
+/* MAP LOADING INDICATOR: Shows while map is loading */
+.map-container::before {
+    content: 'Loading map...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+    z-index: 1000;
+}
+
+/* ========================================
+   POPUP STYLING
+   ======================================== */
+
+/* POPUP CONTENT: Styling for map marker popups */
+.maplibregl-popup-content {
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+    border: none !important;
+    max-width: 300px !important;
+}
+
+.popup-title {
+    color: #2c3e50;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 0.5rem;
+}
+
+.popup-info p {
+    margin-bottom: 0.6rem;
+    font-size: 0.9rem;
+}
+
+.popup-info strong {
+    color: #34495e;
+    font-weight: 600;
+}
+
+/* URL LINK STYLING: Make URLs clickable and styled */
+.popup-url {
+    color: #3498db !important;
+    text-decoration: none;
+    word-break: break-all;
+    font-size: 0.8rem;
+}
+
+.popup-url:hover {
+    color: #2980b9 !important;
+    text-decoration: underline;
+}
+
+/* ========================================
+   FOOTER STYLING
+   ======================================== */
+
+/* FOOTER: Bottom page footer styling */
+.footer {
+    margin-top: 3rem;
+    padding: 2rem 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    text-align: center;
+}
+
+.footer p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* TABLET STYLES: Responsive design for medium screens */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .controls-panel {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        text-align: center;
+    }
+    
+    .zoom-controls {
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .map-container {
+        height: 60vh;
+        min-height: 400px;
+    }
+}
+
+/* MOBILE STYLES: Responsive design for small screens */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .title {
+        font-size: 1.8rem;
+    }
+    
+    .controls-panel {
+        padding: 1rem;
+    }
+    
+    .control-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .map-container {
+        height: 50vh;
+        min-height: 350px;
+    }
+}
+
+/* ========================================
+   ANIMATION AND TRANSITIONS
+   ======================================== */
+
+/* FADE IN ANIMATION: Smooth page load animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header,
+.controls-panel,
+.map-container {
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* LOADING SPINNER: Custom loading animation */
+.loading-spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

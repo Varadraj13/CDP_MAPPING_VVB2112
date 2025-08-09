@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Geolocation Visualization</title>
+    
+    <!-- MapLibre GL JS CSS -->
+    <link href="https://unpkg.com/maplibre-gl@4.1.3/dist/maplibre-gl.css" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        #status {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+        
+        #map {
+            width: 100%;
+            height: 75vh;
+            min-height: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .controls {
+            background: white;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IP Geolocation Data Visualization</h1>
+        <p class="subtitle">Interactive satellite map showing IP locations from HAR file data</p>
+        
+        <div id="status">Loading map...</div>
+        
+        <div id="map"></div>
+        
+        <div class="controls">
+            <button onclick="map.zoomIn()">Zoom In</button>
+            <button onclick="map.zoomOut()">Zoom Out</button>
+            <button onclick="resetView()">Reset View</button>
+        </div>
+    </div>
+
+    <!-- MapLibre GL JS -->
+    <script src="https://unpkg.com/maplibre-gl@4.1.3/dist/maplibre-gl.js"></script>
+    
+    <script>
+        // Global map variable
+        let map;
+        
+        // Status update function
+        function updateStatus(message, color = '#333') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.style.color = color;
+            console.log(message);
+        }
+
+        // Reset view function
+        function resetView() {
+            if (map) {
+                map.easeTo({
+                    center: [-98.5795, 39.8283],
+                    zoom: 4,
+                    duration: 2000
+                });
+            }
+        }
+
+        // Embedded IP location data
+        const ipData = {
+            "type": "FeatureCollection",
+            "features": [
+                {"type": "Feature", "properties": {"ip": "23.209.72.231", "url": "https://www.makemytrip.global/flight/search"}, "geometry": {"type": "Point", "coordinates": [-95.7129, 37.0902]}},
+                {"type": "Feature", "properties": {"ip": "104.18.11.207", "url": "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"}, "geometry": {"type": "Point", "coordinates": [-122.3971, 37.7621]}},
+                {"type": "Feature", "properties": {"ip": "23.54.180.165", "url": "https://imgak.mmtcdn.com/flights/assets/media/splash.png"}, "geometry": {"type": "Point", "coordinates": [-74.006, 40.7143]}},
+                {"type": "Feature", "properties": {"ip": "142.251.40.232", "url": "https://www.googletagmanager.com/gtm.js"}, "geometry": {"type": "Point", "coordinates": [-74.006, 40.7143]}},
+                {"type": "Feature", "properties": {"ip": "150.171.28.10", "url": "https://bat.bing.com/p/action/187049607.js"}, "geometry": {"type": "Point", "coordinates": [-122.1215, 47.674]}},
+                {"type": "Feature", "properties": {"ip": "142.250.65.226", "url": "https://www.googleadservices.com/pagead/conversion"}, "geometry": {"type": "Point", "coordinates": [-74.006, 40.7143]}},
+                {"type": "Feature", "properties": {"ip": "31.13.71.7", "url": "https://connect.facebook.net/en_US/fbevents.js"}, "geometry": {"type": "Point", "coordinates": [2.3522, 48.8566]}},
+                {"type": "Feature", "properties": {"ip": "159.127.42.76", "url": "https://login.dotomi.com/profile/visit/js"}, "geometry": {"type": "Point", "coordinates": [-122.0574, 37.4192]}},
+                {"type": "Feature", "properties": {"ip": "142.250.64.102", "url": "https://ad.doubleclick.net/ddm/activity"}, "geometry": {"type": "Point", "coordinates": [-74.006, 40.7143]}},
+                {"type": "Feature", "properties": {"ip": "31.13.71.36", "url": "https://www.facebook.com/tr/"}, "geometry": {"type": "Point", "coordinates": [2.3522, 48.8566]}},
+                {"type": "Feature", "properties": {"ip": "8.18.45.140", "url": "https://login-ds.dotomi.com/profile/visit/final/js"}, "geometry": {"type": "Point", "coordinates": [-122.0574, 37.4192]}},
+                {"type": "Feature", "properties": {"ip": "63.140.39.210", "url": "https://metrics.makemytrip.com/b/ss/mmtprod"}, "geometry": {"type": "Point", "coordinates": [-78.4767, 38.0293]}},
+                {"type": "Feature", "properties": {"ip": "18.238.50.47", "url": "https://d3c3cq33003psk.cloudfront.net/opentag"}, "geometry": {"type": "Point", "coordinates": [-122.3328, 47.6061]}},
+                {"type": "Feature", "properties": {"ip": "142.251.40.170", "url": "https://fonts.googleapis.com/css2"}, "geometry": {"type": "Point", "coordinates": [-74.006, 40.7143]}},
+                {"type": "Feature", "properties": {"ip": "35.244.159.8", "url": "https://us-u.openx.net/w/1.0/sd"}, "geometry": {"type": "Point", "coordinates": [-122.0574, 37.4192]}},
+                {"type": "Feature", "properties": {"ip": "8.28.7.83", "url": "https://simage2.pubmatic.com/AdServer/Pug"}, "geometry": {"type": "Point", "coordinates": [-74.006, 40.7143]}},
+                {"type": "Feature", "properties": {"ip": "3.218.239.194", "url": "https://pixel.adsafeprotected.com/"}, "geometry": {"type": "Point", "coordinates": [-77.4874, 39.0436]}},
+                {"type": "Feature", "properties": {"ip": "69.173.146.5", "url": "https://pixel.rubiconproject.com/tap.php"}, "geometry": {"type": "Point", "coordinates": [-122.0574, 37.4192]}},
+                {"type": "Feature", "properties": {"ip": "142.250.176.194", "url": "https://cm.g.doubleclick.net/pixel"}, "geometry": {"type": "Point", "coordinates": [-74.006, 40.7143]}},
+                {"type": "Feature", "properties": {"ip": "104.18.26.193", "url": "https://dsum-sec.casalemedia.com/rum"}, "geometry": {"type": "Point", "coordinates": [-122.3971, 37.7621]}},
+                {"type": "Feature", "properties": {"ip": "52.223.22.214", "url": "https://eb2.3lift.com/xuid"}, "geometry": {"type": "Point", "coordinates": [-77.4874, 39.0436]}},
+                {"type": "Feature", "properties": {"ip": "68.67.160.76", "url": "https://ib.adnxs.com/setuid"}, "geometry": {"type": "Point", "coordinates": [-74.006, 40.7143]}},
+                {"type": "Feature", "properties": {"ip": "159.127.43.137", "url": "https://dclk-match.dotomi.com/match/pixel"}, "geometry": {"type": "Point", "coordinates": [-122.0574, 37.4192]}}
+            ]
+        };
+
+        // Initialize map
+        updateStatus('Initializing satellite map...');
+
+        try {
+            map = new maplibregl.Map({
+                container: 'map',
+                style: {
+                    "version": 8,
+                    "sources": {
+                        "satellite": {
+                            "type": "raster",
+                            "tiles": ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+                            "tileSize": 256,
+                            "attribution": "© Esri"
+                        }
+                    },
+                    "layers": [{
+                        "id": "satellite",
+                        "type": "raster",
+                        "source": "satellite"
+                    }]
+                },
+                center: [-98.5795, 39.8283],
+                zoom: 4
+            });
+
+            // Add navigation controls
+            map.addControl(new maplibregl.NavigationControl(), 'top-right');
+
+            // When map loads
+            map.on('load', function() {
+                updateStatus('Map loaded. Adding IP location data...', '#0066cc');
+                
+                try {
+                    // Add data source
+                    map.addSource('ip-locations', {
+                        'type': 'geojson',
+                        'data': ipData
+                    });
+
+                    // Add circles for IP locations
+                    map.addLayer({
+                        'id': 'ip-circles',
+                        'type': 'circle',
+                        'source': 'ip-locations',
+                        'paint': {
+                            'circle-radius': 10,
+                            'circle-color': '#ff4444',
+                            'circle-stroke-color': '#ffffff',
+                            'circle-stroke-width': 3,
+                            'circle-opacity': 0.8
+                        }
+                    });
+
+                    updateStatus(`✅ Successfully loaded ${ipData.features.length} IP locations!`, '#008000');
+
+                    // Add popup on click
+                    map.on('click', 'ip-circles', function(e) {
+                        const coordinates = e.features[0].geometry.coordinates.slice();
+                        const props = e.features[0].properties;
+                        
+                        new maplibregl.Popup()
+                            .setLngLat(coordinates)
+                            .setHTML(`
+                                <div style="max-width: 250px;">
+                                    <h3 style="margin-top: 0; color: #333;">🌍 IP Location</h3>
+                                    <p><strong>IP Address:</strong> ${props.ip}</p>
+                                    <p><strong>Coordinates:</strong> ${coordinates[1].toFixed(4)}, ${coordinates[0].toFixed(4)}</p>
+                                    <p><strong>Source URL:</strong></p>
+                                    <a href="${props.url}" target="_blank" style="word-break: break-all; color: #0066cc;">
+                                        ${props.url.length > 50 ? props.url.substring(0, 50) + '...' : props.url}
+                                    </a>
+                                </div>
+                            `)
+                            .addTo(map);
+                    });
+
+                    // Change cursor on hover
+                    map.on('mouseenter', 'ip-circles', function() {
+                        map.getCanvas().style.cursor = 'pointer';
+                    });
+
+                    map.on('mouseleave', 'ip-circles', function() {
+                        map.getCanvas().style.cursor = '';
+                    });
+
+                } catch (error) {
+                    console.error('Error adding data:', error);
+                    updateStatus('❌ Error adding data: ' + error.message, '#cc0000');
+                }
+            });
+
+            map.on('error', function(e) {
+                console.error('Map error:', e);
+                updateStatus('❌ Map error: ' + (e.error ? e.error.message : 'Unknown error'), '#cc0000');
+            });
+
+        } catch (error) {
+            console.error('Initialization error:', error);
+            updateStatus('❌ Failed to initialize map: ' + error.message, '#cc0000');
+        }
+
+        console.log('🗺️ IP Geolocation Map initialized');
+    </script>
+</body>
+</html>
